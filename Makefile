@@ -1,4 +1,4 @@
-PHONY: all venv install-deps lint test coverage
+.PHONY: all venv install-deps lint test coverage
 
 all: lint coverage
 
