@@ -1,6 +1,9 @@
 # Python software webauthn token
 
 Package is used for testing webauthn enabled web applications.
+SoftWebauthnDevice is deliberately mixing some client and authenticator
+behavior, the interface exported mimic navigator.credentials create() and get()
+functions.
 
 
 ## Development
