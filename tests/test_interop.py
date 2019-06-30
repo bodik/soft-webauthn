@@ -20,12 +20,12 @@ def test_register():
     server = Fido2Server(RelyingParty('example.org'))
     device = SoftWebauthnDevice()
 
-    credentials_options, state = server.register_begin(USER_DICT, [])
-    credential = device.create(credentials_options, 'https://example.org')
+    options, state = server.register_begin(USER_DICT, [])
+    attestation = device.create(options, 'https://example.org')
     auth_data = server.register_complete(
         state,
-        ClientData(credential['response']['clientDataJSON']),
-        AttestationObject(credential['response']['attestationObject']))
+        ClientData(attestation['response']['clientDataJSON']),
+        AttestationObject(attestation['response']['attestationObject']))
 
     assert isinstance(auth_data, AuthenticatorData)
 
@@ -35,16 +35,16 @@ def test_authenticate():
 
     server = Fido2Server(RelyingParty('example.org'))
     device = SoftWebauthnDevice()
-    credentials_options, state = server.register_begin(USER_DICT, [])
-    credential = device.create(credentials_options, 'https://example.org')
+    options, state = server.register_begin(USER_DICT, [])
+    attestation = device.create(options, 'https://example.org')
     auth_data = server.register_complete(
         state,
-        ClientData(credential['response']['clientDataJSON']),
-        AttestationObject(credential['response']['attestationObject']))
+        ClientData(attestation['response']['clientDataJSON']),
+        AttestationObject(attestation['response']['attestationObject']))
     registered_credential = auth_data.credential_data
 
-    credential_options, state = server.authenticate_begin([registered_credential])
-    assertion = device.get(credential_options, 'https://example.org')
+    options, state = server.authenticate_begin([registered_credential])
+    assertion = device.get(options, 'https://example.org')
 
     server.authenticate_complete(
         state,

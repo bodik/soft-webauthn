@@ -39,9 +39,9 @@ def test_create():
     """test create"""
 
     device = SoftWebauthnDevice()
-    public_key_credential = device.create(PKCCO, 'https://example.org')
+    attestation = device.create(PKCCO, 'https://example.org')
 
-    assert public_key_credential
+    assert attestation
     assert device.private_key
     assert device.rp_id == 'example.org'
 

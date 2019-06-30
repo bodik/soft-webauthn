@@ -24,50 +24,49 @@ class SoftWebauthnDevice():
     """
 
     def __init__(self):
-        self.cred_id = None
+        self.credential_id = None
         self.private_key = None
         self.rp_id = None
-        self.user_id = None
+        self.user_handle = None
         self.sign_count = 0
 
-    def create(self, credential_options, origin):
-        """create credential and return PublicKeyCredential object"""
+    def create(self, options, origin):
+        """create credential and return PublicKeyCredential object aka attestation"""
 
-        if {'alg': -7, 'type': 'public-key'} not in credential_options['publicKey']['pubKeyCredParams']:
+        if {'alg': -7, 'type': 'public-key'} not in options['publicKey']['pubKeyCredParams']:
             raise ValueError('Requested pubKeyCredParams does not contain supported type')
 
-        if credential_options['publicKey']['attestation'] != 'none':
+        if options['publicKey']['attestation'] != 'none':
             raise ValueError('Only none attestation supported')
 
         # prepare new key
-        self.cred_id = os.urandom(32)
+        self.credential_id = os.urandom(32)
         self.private_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
-        self.rp_id = credential_options['publicKey']['rp']['id']
-        self.user_id = credential_options['publicKey']['user']['id']
+        self.rp_id = options['publicKey']['rp']['id']
+        self.user_handle = options['publicKey']['user']['id']
 
         # generate credential reseponse
         client_data = {
             'type': 'webauthn.create',
-            'challenge': urlsafe_b64encode(
-                credential_options['publicKey']['challenge']).decode('ascii'),
+            'challenge': urlsafe_b64encode(options['publicKey']['challenge']).decode('ascii'),
             'origin': origin
         }
 
         rp_id_hash = sha256(self.rp_id.encode('ascii'))
         flags = b'\x41'  # attested_data + user_present
         sign_count = pack('>I', self.sign_count)
-        cred_id_length = pack('>H', len(self.cred_id))
+        credential_id_length = pack('>H', len(self.credential_id))
         aaguid = b'\x00'*16
         cose_key = cbor.encode(ES256.from_cryptography_key(self.private_key.public_key()))
         attestation_object = {
-            'authData': rp_id_hash + flags + sign_count + aaguid + cred_id_length + self.cred_id + cose_key,
+            'authData': rp_id_hash + flags + sign_count + aaguid + credential_id_length + self.credential_id + cose_key,
             'fmt': 'packed',
             'attStmt': {}
         }
 
         return {
-            'id': urlsafe_b64encode(self.cred_id),
-            'rawId': self.cred_id,
+            'id': urlsafe_b64encode(self.credential_id),
+            'rawId': self.credential_id,
             'response': {
                 'clientDataJSON': json.dumps(client_data).encode('utf-8'),
                 'attestationObject': cbor.encode(attestation_object)
@@ -75,17 +74,16 @@ class SoftWebauthnDevice():
             'type': 'public-key'
         }
 
-    def get(self, credential_options, origin):
-        """get authentication credential"""
+    def get(self, options, origin):
+        """get authentication credential aka assertion"""
 
-        if self.rp_id != credential_options['publicKey']['rpId']:
+        if self.rp_id != options['publicKey']['rpId']:
             raise ValueError('Requested rpID does not match current credential')
 
         # prepare signature
         client_data = json.dumps({
             'type': 'webauthn.get',
-            'challenge': urlsafe_b64encode(
-                credential_options['publicKey']['challenge']).decode('ascii'),
+            'challenge': urlsafe_b64encode(options['publicKey']['challenge']).decode('ascii'),
             'origin': origin
         }).encode('utf-8')
         client_data_hash = sha256(client_data)
@@ -99,13 +97,13 @@ class SoftWebauthnDevice():
 
         # generate assertion
         return {
-            'id': urlsafe_b64encode(self.cred_id),
-            'rawId': self.cred_id,
+            'id': urlsafe_b64encode(self.credential_id),
+            'rawId': self.credential_id,
             'response': {
                 'authenticatorData': authenticator_data,
                 'clientDataJSON': client_data,
                 'signature': signature,
-                'userHandle': self.user_id
+                'userHandle': self.user_handle
             },
             'type': 'public-key'
         }
