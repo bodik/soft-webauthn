@@ -4,7 +4,7 @@ with open('README.md', 'r') as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name='soft_webauthn',
+    name='soft-webauthn',
     version='0.0.1',
     author='Radoslav Bodó',
     author_email='bodik@cesnet.cz',

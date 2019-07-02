@@ -9,8 +9,8 @@ functions.
 ## Development
 
 ```
-git clone https://gitlab.flab.cesnet.cz/bodik/soft_webauthn
-cd soft_webauthn
+git clone https://gitlab.flab.cesnet.cz/bodik/soft-webauthn
+cd soft-webauthn
 ln -s ../../git_hookprecommit.sh .git/hooks/pre-commit
 
 # OPTIONAL, create and activate virtualenv
