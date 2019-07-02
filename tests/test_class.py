@@ -3,6 +3,7 @@
 import pytest
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec
+from fido2.ctap2 import AttestedCredentialData
 from fido2.utils import sha256
 
 from soft_webauthn import SoftWebauthnDevice
@@ -33,6 +34,15 @@ PKCRO = {
         'rpId': 'example.org',
     }
 }
+
+
+def test_as_attested_cred():
+    """test straight credential generation and access"""
+
+    device = SoftWebauthnDevice()
+    device.create(SoftWebauthnDevice.ZEROCONF_PKCCO, 'https://localhost')
+
+    assert isinstance(device.cred_as_attested(), AttestedCredentialData)
 
 
 def test_create():
