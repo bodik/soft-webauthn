@@ -13,8 +13,8 @@ freeze:
 	@pip freeze | grep -v '^pkg-resources='
 
 lint:
-	python -m flake8 soft_webauthn.py tests
-	python -m pylint soft_webauthn.py tests
+	python -m flake8 soft_webauthn.py tests/
+	python -m pylint soft_webauthn.py tests/
 
 test:
 	python -m pytest -v
