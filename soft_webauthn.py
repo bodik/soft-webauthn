@@ -24,14 +24,6 @@ class SoftWebauthnDevice():
     one credential.
     """
 
-    ZEROCONF_PKCCO = {'publicKey': {
-        'rp': {'id': 'localhost'},
-        'user': {'id': b'randomhandle'},
-        'challenge': b'randomchallenge',
-        'pubKeyCredParams': [{'alg': -7, 'type': 'public-key'}],
-        'attestation': 'none'
-    }}
-
     def __init__(self):
         self.credential_id = None
         self.private_key = None
@@ -39,6 +31,15 @@ class SoftWebauthnDevice():
         self.rp_id = None
         self.user_handle = None
         self.sign_count = 0
+
+
+    def cred_init(self, rp_id, user_handle):
+        """initialize credential for rp_id under user_handle"""
+
+        self.credential_id = os.urandom(32)
+        self.private_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
+        self.rp_id = rp_id
+        self.user_handle = user_handle
 
     def cred_as_attested(self):
         """return current credential as AttestedCredentialData"""
@@ -58,10 +59,7 @@ class SoftWebauthnDevice():
             raise ValueError('Only none attestation supported')
 
         # prepare new key
-        self.credential_id = os.urandom(32)
-        self.private_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
-        self.rp_id = options['publicKey']['rp']['id']
-        self.user_handle = options['publicKey']['user']['id']
+        self.cred_init(options['publicKey']['rp']['id'], options['publicKey']['user']['id'])
 
         # generate credential response
         client_data = {

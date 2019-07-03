@@ -17,8 +17,8 @@ USER_DICT = {
 def test_register():
     """test registering generated credential"""
 
-    server = Fido2Server(RelyingParty('example.org'))
     device = SoftWebauthnDevice()
+    server = Fido2Server(RelyingParty('example.org'))
 
     options, state = server.register_begin(USER_DICT, [])
     attestation = device.create(options, 'https://example.org')
@@ -33,19 +33,13 @@ def test_register():
 def test_authenticate():
     """test authentication"""
 
-    server = Fido2Server(RelyingParty('example.org'))
     device = SoftWebauthnDevice()
-    options, state = server.register_begin(USER_DICT, [])
-    attestation = device.create(options, 'https://example.org')
-    auth_data = server.register_complete(
-        state,
-        ClientData(attestation['response']['clientDataJSON']),
-        AttestationObject(attestation['response']['attestationObject']))
-    registered_credential = auth_data.credential_data
+    device.cred_init('example.org', b'randomhandle')
+    server = Fido2Server(RelyingParty('example.org'))
+    registered_credential = device.cred_as_attested()
 
     options, state = server.authenticate_begin([registered_credential])
     assertion = device.get(options, 'https://example.org')
-
     server.authenticate_complete(
         state,
         [registered_credential],

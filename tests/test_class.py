@@ -1,5 +1,7 @@
 """SoftWebauthnDevice class tests"""
 
+import copy
+
 import pytest
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec
@@ -40,7 +42,7 @@ def test_as_attested_cred():
     """test straight credential generation and access"""
 
     device = SoftWebauthnDevice()
-    device.create(SoftWebauthnDevice.ZEROCONF_PKCCO, 'https://localhost')
+    device.cred_init('rpid', b'randomhandle')
 
     assert isinstance(device.cred_as_attested(), AttestedCredentialData)
 
@@ -60,7 +62,8 @@ def test_create_not_supported_type():
     """test for internal class check"""
 
     device = SoftWebauthnDevice()
-    pkcco = {'publicKey': {'pubKeyCredParams': [{'alg': -8, 'type': 'public-key'}]}}
+    pkcco = copy.deepcopy(PKCCO)
+    pkcco['publicKey']['pubKeyCredParams'][0]['alg'] = -8
 
     with pytest.raises(ValueError):
         device.create(pkcco, 'https://example.org')
@@ -70,12 +73,8 @@ def test_create_not_supported_attestation():
     """test for internal class check"""
 
     device = SoftWebauthnDevice()
-    pkcco = {
-        'publicKey': {
-            'pubKeyCredParams': [{'alg': -7, 'type': 'public-key'}],
-            'attestation': 'direct'
-        }
-    }
+    pkcco = copy.deepcopy(PKCCO)
+    pkcco['publicKey']['attestation'] = 'direct'
 
     with pytest.raises(ValueError):
         device.create(pkcco, 'https://example.org')
@@ -85,7 +84,7 @@ def test_get():
     """test get"""
 
     device = SoftWebauthnDevice()
-    device.create(PKCCO, 'https://example.org')
+    device.cred_init(PKCRO['publicKey']['rpId'], b'randomhandle')
 
     assertion = device.get(PKCRO, 'https://example.org')
 
@@ -100,9 +99,9 @@ def test_get_not_matching_rpid():
     """test get not mathcing rpid"""
 
     device = SoftWebauthnDevice()
-    device.create(PKCCO, 'https://example.org')
+    device.cred_init('rpid', b'randomhandle')
 
-    tmp = PKCRO
-    tmp['publicKey']['rpId'] = 'another.example.org'
+    pkcro = copy.deepcopy(PKCRO)
+    pkcro['publicKey']['rpId'] = 'another_rpid'
     with pytest.raises(ValueError):
-        device.get(tmp, 'https://example.org')
+        device.get(pkcro, 'https://example.org')
