@@ -92,7 +92,8 @@ def test_get():
     device.private_key.public_key().verify(
         assertion['response']['signature'],
         assertion['response']['authenticatorData'] + sha256(assertion['response']['clientDataJSON']),
-        ec.ECDSA(hashes.SHA256()))
+        ec.ECDSA(hashes.SHA256())
+    )
 
 
 def test_get_not_matching_rpid():

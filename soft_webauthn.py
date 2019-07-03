@@ -32,7 +32,6 @@ class SoftWebauthnDevice():
         self.user_handle = None
         self.sign_count = 0
 
-
     def cred_init(self, rp_id, user_handle):
         """initialize credential for rp_id under user_handle"""
 
