@@ -14,7 +14,6 @@ lazy-object-proxy==1.4.1
 mccabe==0.6.1
 more-itertools==7.1.0
 packaging==19.0
-pkg-resources==0.0.0
 pluggy==0.12.0
 py==1.8.0
 pycodestyle==2.5.0

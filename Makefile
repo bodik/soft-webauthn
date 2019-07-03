@@ -2,16 +2,15 @@
 
 all: lint coverage
 
-
 venv:
-	# development target
 	sudo apt-get -y install python-virtualenv python3-virtualenv
 	virtualenv -p python3 venv
-
 
 install-deps:
 	pip install -r requirements.txt
 
+freeze:
+	@pip freeze | grep -v '^pkg-resources='
 
 lint:
 	python -m flake8 soft_webauthn.py tests
