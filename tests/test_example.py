@@ -15,7 +15,7 @@ def client():
     yield tests.example_server.app.test_client()
 
 
-def test_example_server_registration(client):
+def test_example_server_registration(client):  # pylint: disable=redefined-outer-name
     """Registration example"""
 
     # User holds an authenticator.
@@ -58,7 +58,7 @@ def test_example_server_registration(client):
     assert registration_response == {'status': 'OK'}
 
 
-def test_example_server_authentication(client):
+def test_example_server_authentication(client):  # pylint: disable=redefined-outer-name
     """Authentication example"""
 
     # Already registered credential is typicaly part of fixture test-case code.
