@@ -5,7 +5,6 @@ attrs==19.1.0
 cffi==1.12.3
 coverage==4.5.3
 cryptography==2.7
-ecdsa==0.13.2
 entrypoints==0.3
 fido2==0.7.0
 flake8==3.7.7
@@ -23,7 +22,7 @@ pycparser==2.19
 pyflakes==2.1.1
 pylint==2.3.1
 pyparsing==2.4.0
-pytest==4.6.3
+pytest==5.0.0
 six==1.12.0
 typed-ast==1.4.0
 wcwidth==0.1.7
