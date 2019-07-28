@@ -1,4 +1,4 @@
-.PHONY: all venv install-deps lint test coverage
+.PHONY: all venv install-deps freeze lint test coverage wheel upload
 
 all: lint coverage
 
@@ -22,3 +22,8 @@ test:
 coverage:
 	coverage run --source soft_webauthn -m pytest tests -x -vv
 	coverage report --show-missing --fail-under 100
+
+wheel:
+	python setup.py sdist bdist_wheel
+upload:
+	twine upload dist/*
