@@ -3,17 +3,29 @@
 [![Build Status](https://travis-ci.org/bodik/soft-webauthn.svg?branch=master)](https://travis-ci.org/bodik/soft-webauthn)
 
 Package is used for testing webauthn enabled web applications. The use-case is
-authenticator simulation during web application development CI, eg. FIDO2 token
-emulation during registration and authentication process.
+authenticator and browser emulation during web application development
+continuous integration.
 
-`SoftWebauthnDevice` class is deliberately mixing some client and authenticator
-behavior, the interface exported mimic navigator.credentials create() and get()
-functions. Note that communication protocol between *Client* and *Relaying
-Party* is out-of-scope of Webauthn specification as well as credential storage
-and it's association with the user identity.
+`SoftWebauthnDevice` class interface exports basic navigator interface used for
+webauthn features:
 
-Example usage code can be found in `tests/test_interop.py` (Token/Client vs RP
-API) and `tests/test_example.py` (Token/Client vs RP HTTP).  Despite internal
+* `SoftWebauthnDevice.create(...)` aka `navigator.credentials.create(...)`
+* `SoftWebauthnDevice.get(...)` aka `navigator.credentials.get(...)`
+
+To support authentication tests without prior registration/attestation, the
+class exports additional functions:
+
+* `SoftWebauthnDevice.cred_init(rp_id, user_handle)`
+* `SoftWebauthnDevice.cred_as_attested()`
+
+There is no standard/specification for *Client* (browser) to *Relying party*
+(web application) communication. Therefore the class should be be used in a web
+application test suite along with other code handling webapp specific tasks
+such as conveying *CredentialCreationOptions* from webapp and
+*PublicKeyCredential* back to the webapp.
+
+The example usage can be found in `tests/test_interop.py` (Token/Client vs RP
+API) and `tests/test_example.py` (Token/Client vs RP HTTP). Despite internal
 usage of `yubico/python-fido2` package, the project should be usable againts
 other RP implementations as well.
 
