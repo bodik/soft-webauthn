@@ -2,7 +2,8 @@
 
 from fido2.client import ClientData
 from fido2.ctap2 import AttestationObject, AuthenticatorData
-from fido2.server import Fido2Server, RelyingParty
+from fido2.server import Fido2Server
+from fido2.webauthn import PublicKeyCredentialRpEntity
 
 from soft_webauthn import SoftWebauthnDevice
 
@@ -12,7 +13,7 @@ def test_register():
 
     device = SoftWebauthnDevice()
 
-    server = Fido2Server(RelyingParty('example.org'))
+    server = Fido2Server(PublicKeyCredentialRpEntity('example.org', 'test server'))
     exclude_credentials = []
     options, state = server.register_begin(
         {'id': b'randomhandle', 'name': 'username', 'displayName': 'User Name'},
@@ -35,7 +36,7 @@ def test_authenticate():
     device.cred_init('example.org', b'randomhandle')
     registered_credential = device.cred_as_attested()
 
-    server = Fido2Server(RelyingParty('example.org'))
+    server = Fido2Server(PublicKeyCredentialRpEntity('example.org', 'test server'))
     options, state = server.authenticate_begin([registered_credential])
     assertion = device.get(options, 'https://example.org')
     server.authenticate_complete(

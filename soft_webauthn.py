@@ -54,7 +54,7 @@ class SoftWebauthnDevice():
         if {'alg': -7, 'type': 'public-key'} not in options['publicKey']['pubKeyCredParams']:
             raise ValueError('Requested pubKeyCredParams does not contain supported type')
 
-        if options['publicKey']['attestation'] != 'none':
+        if ('attestation' in options['publicKey']) and (options['publicKey']['attestation'] != 'none'):
             raise ValueError('Only none attestation supported')
 
         # prepare new key

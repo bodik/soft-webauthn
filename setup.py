@@ -14,7 +14,7 @@ setuptools.setup(
     url='https://github.com/bodik/soft_webauthn',
     py_modules=['soft_webauthn'],
     install_requires=[
-        'fido2<0.8',
+        'fido2>=0.8',
         'cryptography'
     ],
     classifiers=[
