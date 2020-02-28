@@ -13,7 +13,10 @@ setuptools.setup(
     long_description_content_type='text/markdown',
     url='https://github.com/bodik/soft_webauthn',
     py_modules=['soft_webauthn'],
-    install_requires=['fido2', 'cryptography'],
+    install_requires=[
+        'fido2<0.8',
+        'cryptography'
+    ],
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',

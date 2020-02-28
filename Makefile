@@ -7,7 +7,7 @@ venv:
 	virtualenv -p python3 venv
 
 install-deps:
-	pip install -r requirements-dev.txt
+	pip install -r requirements-dev.lock
 
 freeze:
 	@pip freeze | grep -v '^pkg-resources='
