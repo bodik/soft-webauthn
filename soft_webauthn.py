@@ -76,7 +76,7 @@ class SoftWebauthnDevice():
             'authData':
                 rp_id_hash + flags + sign_count
                 + self.aaguid + credential_id_length + self.credential_id + cose_key,
-            'fmt': 'packed',
+            'fmt': 'none',
             'attStmt': {}
         }
 
