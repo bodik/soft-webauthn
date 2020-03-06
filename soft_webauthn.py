@@ -96,6 +96,8 @@ class SoftWebauthnDevice():
         if self.rp_id != options['publicKey']['rpId']:
             raise ValueError('Requested rpID does not match current credential')
 
+        self.sign_count += 1
+
         # prepare signature
         client_data = json.dumps({
             'type': 'webauthn.get',
