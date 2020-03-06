@@ -1,5 +1,8 @@
 # soft-webauthn changelog
 
+## 0.1.1 -- unreleased
+
+
 ## 0.1.0
 
 * update fido2 library and adapt to API breaking changes

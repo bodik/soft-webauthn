@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='soft-webauthn',
-    version='0.1.0',
+    version='0.1.1',
     author='Radoslav Bodó',
     author_email='bodik@cesnet.cz',
     description='Python webauthn software authenticator',
