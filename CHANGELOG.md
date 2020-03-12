@@ -1,7 +1,9 @@
 # soft-webauthn changelog
 
-## 0.1.1 -- unreleased
+## 0.1.1
 
+* fix sign_count
+* fix attestation format
 
 ## 0.1.0
 
