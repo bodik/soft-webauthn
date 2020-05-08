@@ -63,7 +63,7 @@ class SoftWebauthnDevice():
         # generate credential response
         client_data = {
             'type': 'webauthn.create',
-            'challenge': urlsafe_b64encode(options['publicKey']['challenge']).decode('ascii'),
+            'challenge': urlsafe_b64encode(options['publicKey']['challenge']).decode('ascii').rstrip('='),
             'origin': origin
         }
 
@@ -101,7 +101,7 @@ class SoftWebauthnDevice():
         # prepare signature
         client_data = json.dumps({
             'type': 'webauthn.get',
-            'challenge': urlsafe_b64encode(options['publicKey']['challenge']).decode('ascii'),
+            'challenge': urlsafe_b64encode(options['publicKey']['challenge']).decode('ascii').rstrip('='),
             'origin': origin
         }).encode('utf-8')
         client_data_hash = sha256(client_data)
