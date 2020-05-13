@@ -2,8 +2,8 @@
 
 ## 0.1.1
 
-* fix sign_count
-* fix attestation format
+* fix sign_count (PR#6 thanks to @sstoel)
+* fix attestation format (PR#4 thanks to @sstoel)
 
 ## 0.1.0
 
