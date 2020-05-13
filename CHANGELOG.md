@@ -1,5 +1,9 @@
 # soft-webauthn changelog
 
+## 0.1.2
+
+* fixed challenge attribute in clientDataJSON (PR#9 thanks to @kverdecia)
+
 ## 0.1.1
 
 * fix sign_count (PR#6 thanks to @sstoel)
