@@ -13,7 +13,7 @@ from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec
 from fido2 import cbor
 from fido2.cose import ES256
-from fido2.ctap2 import AttestedCredentialData
+from fido2.webauthn import AttestedCredentialData
 from fido2.utils import sha256
 
 
@@ -54,7 +54,7 @@ class SoftWebauthnDevice():
         if {'alg': -7, 'type': 'public-key'} not in options['publicKey']['pubKeyCredParams']:
             raise ValueError('Requested pubKeyCredParams does not contain supported type')
 
-        if ('attestation' in options['publicKey']) and (options['publicKey']['attestation'] != 'none'):
+        if ('attestation' in options['publicKey']) and (options['publicKey']['attestation'] not in [None, 'none']):
             raise ValueError('Only none attestation supported')
 
         # prepare new key

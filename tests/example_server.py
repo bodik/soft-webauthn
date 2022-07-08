@@ -33,12 +33,13 @@ See the file README.adoc in this directory for details.
 
 Navigate to https://localhost:5000 in a supported web browser.
 """
-from __future__ import print_function, absolute_import, unicode_literals
-
-from fido2.webauthn import PublicKeyCredentialRpEntity
-from fido2.client import ClientData
+from fido2.webauthn import (
+    CollectedClientData,
+    PublicKeyCredentialRpEntity,
+    AttestationObject,
+    AuthenticatorData,
+)
 from fido2.server import Fido2Server
-from fido2.ctap2 import AttestationObject, AuthenticatorData
 from fido2 import cbor
 from flask import Flask, session, request, redirect, abort
 
@@ -48,7 +49,7 @@ import os
 app = Flask(__name__, static_url_path="")
 app.secret_key = os.urandom(32)  # Used for session.
 
-rp = PublicKeyCredentialRpEntity("localhost", "Demo server")
+rp = PublicKeyCredentialRpEntity(name="Demo server", id="localhost")
 server = Fido2Server(rp)
 
 
@@ -69,7 +70,6 @@ def register_begin():
             "id": b"user_id",
             "name": "a_user",
             "displayName": "A. User",
-            "icon": "https://example.com/image.png",
         },
         credentials,
         user_verification="discouraged",
@@ -86,7 +86,7 @@ def register_begin():
 @app.route("/api/register/complete", methods=["POST"])
 def register_complete():
     data = cbor.decode(request.get_data())
-    client_data = ClientData(data["clientDataJSON"])
+    client_data = CollectedClientData(data["clientDataJSON"])
     att_obj = AttestationObject(data["attestationObject"])
     print("clientData", client_data)
     print("AttestationObject:", att_obj)
@@ -115,7 +115,7 @@ def authenticate_complete():
 
     data = cbor.decode(request.get_data())
     credential_id = data["credentialId"]
-    client_data = ClientData(data["clientDataJSON"])
+    client_data = CollectedClientData(data["clientDataJSON"])
     auth_data = AuthenticatorData(data["authenticatorData"])
     signature = data["signature"]
     print("clientData", client_data)
@@ -133,6 +133,10 @@ def authenticate_complete():
     return cbor.encode({"status": "OK"})
 
 
-if __name__ == "__main__":
+def main():
     print(__doc__)
-    app.run(ssl_context="adhoc", debug=True)
+    app.run(ssl_context="adhoc", debug=False)
+
+
+if __name__ == "__main__":
+    main()

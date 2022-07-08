@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name='soft-webauthn',
-    version='0.1.3',
+    version='0.1.4',
     author='Radoslav Bodó',
     author_email='bodik@cesnet.cz',
     description='Python webauthn software authenticator',
@@ -14,7 +14,7 @@ setuptools.setup(
     url='https://github.com/bodik/soft-webauthn',
     py_modules=['soft_webauthn'],
     install_requires=[
-        'fido2>=0.8,<1.0.0',
+        'fido2>=1.0,<2.0',
         'cryptography'
     ],
     classifiers=[
