@@ -3,6 +3,7 @@
 ## 0.1.3
 
 * fixed: fido2 version dependency (upper limit)
+* changed: replace travis with github actions
 
 ## 0.1.2
 
