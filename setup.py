@@ -11,7 +11,7 @@ setuptools.setup(
     description='Python webauthn software authenticator',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    url='https://github.com/bodik/soft_webauthn',
+    url='https://github.com/bodik/soft-webauthn',
     py_modules=['soft_webauthn'],
     install_requires=[
         'fido2>=0.8,<1.0.0',
