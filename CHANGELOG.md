@@ -1,5 +1,9 @@
 # soft-webauthn changelog
 
+## 0.1.4
+
+* changed: bump packages including fido2 and fix for it's new API
+
 ## 0.1.3
 
 * fixed: fido2 version dependency (upper limit)
