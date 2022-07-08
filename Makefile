@@ -3,7 +3,7 @@
 all: lint coverage
 
 venv:
-	sudo apt-get -y install python-virtualenv python3-virtualenv
+	sudo apt-get -y install python3-virtualenv
 	virtualenv -p python3 venv
 
 install-deps:

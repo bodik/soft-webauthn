@@ -1,5 +1,9 @@
 # soft-webauthn changelog
 
+## 0.1.3
+
+* fixed: fido2 version dependency (upper limit)
+
 ## 0.1.2
 
 * fixed challenge attribute in clientDataJSON (PR#9 thanks to @kverdecia)
