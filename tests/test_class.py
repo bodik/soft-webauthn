@@ -58,6 +58,30 @@ def test_create():
     assert device.rp_id == 'example.org'
 
 
+def test_create_direct_attestation():
+    """test for internal class check"""
+
+    device = SoftWebauthnDevice()
+    pkcco = copy.deepcopy(PKCCO)
+    pkcco['publicKey']['attestation'] = 'direct'
+    attestation = device.create(pkcco, 'https://example.org')
+    assert attestation
+    assert device.private_key
+    assert device.rp_id == 'example.org'
+
+
+def test_create_indirect_attestation():
+    """test that indirect returns same as direct (as allowed by spec))"""
+
+    device = SoftWebauthnDevice()
+    pkcco = copy.deepcopy(PKCCO)
+    pkcco['publicKey']['attestation'] = 'indirect'
+    attestation = device.create(pkcco, 'https://example.org')
+    assert attestation
+    assert device.private_key
+    assert device.rp_id == 'example.org'
+
+
 def test_create_not_supported_type():
     """test for internal class check"""
 
@@ -74,7 +98,7 @@ def test_create_not_supported_attestation():
 
     device = SoftWebauthnDevice()
     pkcco = copy.deepcopy(PKCCO)
-    pkcco['publicKey']['attestation'] = 'direct'
+    pkcco['publicKey']['attestation'] = 'enterprise'
 
     with pytest.raises(ValueError):
         device.create(pkcco, 'https://example.org')
