@@ -5,11 +5,10 @@ import copy
 import pytest
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec
-from fido2.webauthn import AttestedCredentialData
 from fido2.utils import sha256
+from fido2.webauthn import AttestedCredentialData
 
 from soft_webauthn import SoftWebauthnDevice
-
 
 # PublicKeyCredentialCreationOptions
 PKCCO = {
@@ -36,6 +35,19 @@ PKCRO = {
         'rpId': 'example.org',
     }
 }
+
+
+def _device_assertions(device):
+    """verify authenticator response"""
+
+    assertion = device.get(PKCRO, 'https://example.org')
+
+    assert assertion
+    device.private_key.public_key().verify(
+        assertion['response']['signature'],
+        assertion['response']['authenticatorData'] + sha256(assertion['response']['clientDataJSON']),
+        ec.ECDSA(hashes.SHA256())
+    )
 
 
 def test_as_attested_cred():
@@ -86,14 +98,7 @@ def test_get():
     device = SoftWebauthnDevice()
     device.cred_init(PKCRO['publicKey']['rpId'], b'randomhandle')
 
-    assertion = device.get(PKCRO, 'https://example.org')
-
-    assert assertion
-    device.private_key.public_key().verify(
-        assertion['response']['signature'],
-        assertion['response']['authenticatorData'] + sha256(assertion['response']['clientDataJSON']),
-        ec.ECDSA(hashes.SHA256())
-    )
+    _device_assertions(device)
 
 
 def test_get_not_matching_rpid():
