@@ -5,7 +5,7 @@ applications
 
 import json
 import os
-from base64 import urlsafe_b64encode, urlsafe_b64decode
+from base64 import urlsafe_b64encode
 from struct import pack
 
 from cryptography.hazmat.backends import default_backend
@@ -14,7 +14,7 @@ from cryptography.hazmat.primitives.asymmetric import ec
 from fido2 import cbor
 from fido2.cose import ES256
 from fido2.webauthn import AttestedCredentialData
-from fido2.utils import sha256, websafe_encode
+from fido2.utils import sha256
 
 
 class SoftWebauthnDevice():
