@@ -7,14 +7,15 @@ import json
 import os
 from base64 import urlsafe_b64encode
 from struct import pack
+from typing import Dict, Union
 
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import ec
 from fido2 import cbor
 from fido2.cose import ES256
-from fido2.webauthn import AttestedCredentialData
 from fido2.utils import sha256
+from fido2.webauthn import AttestedCredentialData, CredentialCreationOptions, CredentialRequestOptions
 
 
 class SoftWebauthnDevice():
@@ -48,7 +49,7 @@ class SoftWebauthnDevice():
             self.credential_id,
             ES256.from_cryptography_key(self.private_key.public_key()))
 
-    def create(self, options, origin):
+    def create(self, options: Union[CredentialCreationOptions, Dict], origin: str):
         """create credential and return PublicKeyCredential object aka attestation"""
 
         if {'alg': -7, 'type': 'public-key'} not in options['publicKey']['pubKeyCredParams']:
@@ -90,7 +91,7 @@ class SoftWebauthnDevice():
             'type': 'public-key'
         }
 
-    def get(self, options, origin):
+    def get(self, options: Union[CredentialRequestOptions, Dict], origin: str):
         """get authentication credential aka assertion"""
 
         if self.rp_id != options['publicKey']['rpId']:
