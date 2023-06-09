@@ -44,6 +44,8 @@ from fido2 import cbor
 from flask import Flask, session, request, redirect, abort
 
 import os
+import fido2.features
+fido2.features.webauthn_json_mapping.enabled = False
 
 
 app = Flask(__name__, static_url_path="")
