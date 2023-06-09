@@ -15,6 +15,7 @@ freeze:
 lint:
 	python -m flake8 soft_webauthn.py tests
 	python -m pylint --ignore=example_server.py soft_webauthn.py tests
+	python -m black --check soft_webauthn.py tests
 
 test:
 	python -m pytest -v
@@ -22,6 +23,9 @@ test:
 coverage:
 	coverage run --source soft_webauthn -m pytest tests -x -vv
 	coverage report --show-missing --fail-under 100
+
+black:
+	python -m black soft_webauthn.py tests
 
 wheel:
 	python setup.py sdist bdist_wheel
